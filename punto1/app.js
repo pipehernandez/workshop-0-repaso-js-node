@@ -37,6 +37,9 @@ class TaskManager {
       this.saveTasks();
       this.renderTasks();
     }
+    else{
+      alert("Tarea no encontrada")
+    }
   }
 
   saveTasks() {
@@ -65,19 +68,19 @@ class TaskManager {
         this.deleteTask(task.id);
       });
 
-      const completedButton = document.createElement("button");
+      const completedButton = document.createElement("BUTTON");
       completedButton.textContent = "Cambiar estado";
       completedButton.addEventListener("click", (e) => {
         e.stopPropagation();
         this.toggleTaskComplete(task.id);
       });
 
-      const editBtn = document.createElement("button");
+      const editBtn = document.createElement("BUTTON");
       editBtn.textContent = "Editar";
       editBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        const editInput = document.createElement("input");
-        const editDescriptionBtn = document.createElement("button");
+        const editInput = document.createElement("INPUT");
+        const editDescriptionBtn = document.createElement("BUTTON");
         editDescriptionBtn.textContent = "Editar";
         editInput.value = `${task.description}`;
         item.appendChild(editInput);

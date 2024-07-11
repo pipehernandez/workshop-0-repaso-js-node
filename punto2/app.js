@@ -13,7 +13,7 @@ class Note {
 class NoteManager {
     constructor() {
         this.notes = JSON.parse(localStorage.getItem('notes')) || [];
-        this.loadNotes();
+        this.renderNotes();
     }
 
     addNote(description) {
@@ -43,7 +43,10 @@ class NoteManager {
         localStorage.setItem('notes', JSON.stringify(this.notes));
     }
 
-    loadNotes() {
+    updateNote(id, newName){
+        const noteToUpdate = this.notes.find(note => note.id === id);
+        noteToUpdate.name = newName;
+        this.saveNotes();
         this.renderNotes();
     }
 
@@ -51,45 +54,38 @@ class NoteManager {
         const noteList = document.getElementById('note-list');
         noteList.innerHTML = '';
         this.notes.forEach((note) => {
-            const item = document.createElement('li');
+            const item = document.createElement('LI');
             item.textContent = `Nota ${note.id}: ${note.description}. Importante: ${note.important} `;
             item.className = note.important ? 'important' : '';
             // item.addEventListener('click', () => this.toggleNoteImportant(note.id));
 
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Eliminar';
-            deleteButton.addEventListener('click', (e) => {
+            const $deleteButton = document.createElement('BUTTON');
+            $deleteButton.textContent = 'Eliminar';
+            $deleteButton.addEventListener('click', (e) => {
                 e.stopPropagation(); // Evitar que el evento se propague al elemento padre, ¿Por qué? Porque el evento click en el botón también se propaga al elemento li.
                 this.deleteNote(note.id);
             });
 
-            const completedButton = document.createElement("button");
+            const completedButton = document.createElement("BUTTON");
             completedButton.textContent = "Cambiar Importancia";
             completedButton.addEventListener("click", (e) => {
               e.stopPropagation();
               this.toggleNoteImportant(note.id);
             });
 
-            const editBtn = document.createElement("button");
+            const editBtn = document.createElement("BUTTON");
             editBtn.textContent = "Editar";
             editBtn.addEventListener("click", (e) => {
               e.stopPropagation();
-              const editInput = document.createElement("input");
-              const editDescriptionBtn = document.createElement("button");
-              editDescriptionBtn.textContent = "Editar";
-              editInput.value = `${note.description}`;
-              item.appendChild(editInput);
-              item.appendChild(editDescriptionBtn);
-              editDescriptionBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                note.description = editInput.value;
-                this.loadNotes();
-              });
+              const newName = prompt("Ingresa nuevo nombre");
+              while(!newName){
+                alert("Ingresa nombre valido")
+              }
+              this.updateNote(note.id, newName);
+              this.renderNotes();
             });
 
-            item.appendChild(editBtn);
-            item.appendChild(completedButton);
-            item.appendChild(deleteButton);
+            item.append(editBtn, completedButton, $deleteButton);
             noteList.appendChild(item);
 
         });
